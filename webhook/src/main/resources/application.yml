@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+# Rabbitmq
+rabbitmq:
+  hostname: localhost
+  port: 5672
+  username: guest
+  password: guest
+  exchange: direct-exchange
+  
+# Database
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/webhook
+    username: root
+    password: root
+    driver-class-name: org.mariadb.jdbc.Driver
+# Hibernate
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect    
+      ddl-auto: update

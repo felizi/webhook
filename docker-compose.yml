@@ -1,0 +1,83 @@
+version: '2'
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    restart: always
+    ports:
+      - 15672:15672
+      - 5672:5672
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+        
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    image: mysql:5.6
+    restart: always
+    ports:
+      - 3306:3306
+    logging:
+        options:
+          max-size: "10m"
+          max-file: "10"
+
+  config:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build:
+      ./config
+    volumes:
+      - ./config:/app
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  registry:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build:
+      ./registry
+    volumes:
+      - ./registry:/app
+    restart: always
+    ports:
+      - 8761:8761
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  gateway:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build:
+      ./gateway
+    volumes:
+      - ./gateway:/app
+    restart: always
+    ports:
+      - 80:8888
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  webhook:
+    environment:
+      CONFIG_SERVICE_PASSWORD: $CONFIG_SERVICE_PASSWORD
+    build:
+      ./webhook
+    volumes:
+      - ./webhook:/app
+    restart: always
+    ports:
+      - 8080:8080
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
