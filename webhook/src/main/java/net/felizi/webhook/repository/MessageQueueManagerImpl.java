@@ -9,7 +9,7 @@ import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -48,7 +48,7 @@ public class MessageQueueManagerImpl implements MessageQueueManager {
 
 			queueName = admin.declareQueue(newQueue);
 
-			admin.declareBinding(BindingBuilder.bind(newQueue).to(DirectExchange.DEFAULT).with(queueName));
+			admin.declareBinding(new Binding(queueName, Binding.DestinationType.QUEUE, exchange.getName(), queueName, null));
 
 			SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 			container.addQueueNames(queueName);
