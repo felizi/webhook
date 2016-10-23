@@ -24,10 +24,13 @@ import net.felizi.webhook.repository.DestinationRepository;
 
 @Component
 public class WebhookMessageListener implements ChannelAwareMessageListener {
-	@Autowired
 	private ObjectMapper objectMapper;
-	@Autowired
 	private DestinationRepository destinationRepository;
+	
+	public WebhookMessageListener(ObjectMapper objectMapper, DestinationRepository destinationRepository) {
+		this.objectMapper = objectMapper;
+		this.destinationRepository = destinationRepository;
+	}
 
 	@Override
 	public void onMessage(Message message, Channel channel) {

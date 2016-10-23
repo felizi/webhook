@@ -19,6 +19,8 @@ import org.springframework.amqp.support.converter.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.felizi.webhook.rabbitmq.WebhookMessageListener;
 
 @Repository
@@ -34,6 +36,10 @@ public class MessageQueueManagerImpl implements MessageQueueManager {
 	private DirectExchange exchange;
 	@Autowired
 	private JsonMessageConverter jsonMessageConverter;
+	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
+	private DestinationRepository destinationRepository;
 
 	private Map<String, SimpleMessageListenerContainer> queueContainer = new HashMap<>();
 
@@ -53,7 +59,7 @@ public class MessageQueueManagerImpl implements MessageQueueManager {
 			SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
 			container.addQueueNames(queueName);
 			container.addQueues(newQueue);
-			container.setMessageListener(new MessageListenerAdapter(new WebhookMessageListener()));
+			container.setMessageListener(new MessageListenerAdapter(new WebhookMessageListener(objectMapper, destinationRepository)));
 			container.setConnectionFactory(connectionFactory);
 			container.setAcknowledgeMode(AcknowledgeMode.AUTO);
 			container.setMessageConverter(jsonMessageConverter);
